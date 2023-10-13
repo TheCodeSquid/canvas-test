@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "types": [
+      "vite/client"
+    ]
+  }
+}

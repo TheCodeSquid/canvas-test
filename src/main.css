@@ -1,0 +1,41 @@
+:root {
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  color: #fff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #191919;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.text {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  mask-image: url("/contrast-text.svg");
+  mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+
+  aspect-ratio: 5;
+  width: calc(max(256px, 50vw));
+
+  backdrop-filter: invert(1) hue-rotate(180deg);
+}

@@ -1,0 +1,13 @@
+{
+  "name": "canvas-test",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "vite": "^4.4.11"
+  }
+}
