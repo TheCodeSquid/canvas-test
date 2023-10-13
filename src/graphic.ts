@@ -23,6 +23,12 @@ const FRAGMENT_SHADER = `
 
   varying vec2 v_uv;
 
+  // randomness for dithering
+  // https://shader-tutorial.dev/advanced/color-banding-dithering/
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 47358.5453);
+  }
+
   void main() {
     float aspect = screen.x / screen.y;
     float middle = screen.y / 2.0;
@@ -40,12 +46,17 @@ const FRAGMENT_SHADER = `
 
     vec3 color;
     if (screen_uv.y < threshold) {
+      // solid white
       color = vec3(1.0);
     } else {
       float proximity = screen_uv.y - threshold;
       float glow = (pulse * 7.0) / (proximity + 10.0);
 
+      // apply glow
       color = mix(vec3(0.1), vec3(0.7, 0.5, 0.9), glow);
+
+      // apply dither
+      color += mix(-0.5/255.0, 0.5/255.0, random(screen_uv));
     }
 
     gl_FragColor = vec4(color, 1.0);
