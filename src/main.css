@@ -1,3 +1,9 @@
+:root {
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: calc(min(32px, max(20px, 2vw)));
+}
+
 html,
 body {
   margin: 0;
@@ -6,8 +12,14 @@ body {
 
 body {
   background-color: #191919;
-  height: 100vh;
+  min-height: 200vh;
   overflow-x: hidden;
+}
+
+canvas {
+  position: sticky;
+  top: -45vh;
+  z-index: -2;
 }
 
 .overlay {
@@ -21,6 +33,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  z-index: -1;
 }
 
 .text {
@@ -33,4 +47,49 @@ body {
   width: calc(max(256px, 50vw));
 
   backdrop-filter: invert(1) hue-rotate(180deg);
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1em;
+  z-index: 1;
+
+  opacity: 0;
+  transform: translateY(-1em);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+nav.shown {
+  opacity: 1;
+  transform: none;
+}
+
+nav>a {
+  color: #000;
+  font-style: italic;
+}
+
+main {
+  max-width: 40rem;
+  margin: -40vh auto 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+
+  opacity: 0;
+  transform: translateY(1em);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+main.shown {
+  opacity: 1;
+  transform: none;
+}
+
+h1 {
+  text-align: center;
 }

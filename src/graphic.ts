@@ -22,6 +22,7 @@ const FRAGMENT_SHADER = `
 
   uniform vec2 screen;
   uniform float time;
+  uniform float scroll;
 
   varying vec2 v_uv;
 
@@ -34,14 +35,20 @@ const FRAGMENT_SHADER = `
   void main() {
     float aspect = screen.x / screen.y;
     float middle = screen.y / 2.0;
+    float mid_scroll = max(0.0, 1.0 - scroll * 2.0);
     vec2 screen_uv = v_uv * screen;
 
     float wave_scale = max(40.0, min(screen.x / 25.0, pow(screen.x / 80.0, 2.0)));
 
-    float main_wave = sin(screen_uv.x / wave_scale + time) * wave_scale;
-    float sub_wave = sin(screen_uv.x / wave_scale * 0.2 + time) * wave_scale * 0.5;
-    float curve = pow(screen_uv.x / (60.0 * aspect), 2.0);
-    float pulse = pow(sin(time * 1.5), 2.0) * 0.9 + 1.0;
+    float main_wave = sin(screen_uv.x / wave_scale + time) * wave_scale
+      * 0.75
+      * max(0.5, mid_scroll);
+    float sub_wave = sin(screen_uv.x / wave_scale * 0.2 + time)
+      * wave_scale * 0.5
+      * max(0.2, mid_scroll);
+    float curve = pow(screen_uv.x / (60.0 * aspect), 2.0) * mid_scroll;
+
+    float pulse = pow(sin(time * 1.5), 2.0) * 0.9 * mid_scroll + 1.0;
 
     float duration = 2.0;
     float delay = 1.0;
@@ -50,8 +57,9 @@ const FRAGMENT_SHADER = `
       float ease_cubic = x < 0.5 ? 4.0 * pow(x, 3.0) : 1.0 - pow(-2.0 * x + 2.0, 3.0) / 2.0;
       main_wave *= ease_cubic;
     }
+    main_wave *= max(0.5, mid_scroll);
 
-    float offset = middle / 10.0;
+    float offset = middle / 10.0 - scroll * 10.0;
     float threshold = middle + main_wave + sub_wave - curve + offset;
 
     vec3 color;
@@ -60,7 +68,7 @@ const FRAGMENT_SHADER = `
       color = vec3(1.0);
     } else {
       float proximity = screen_uv.y - threshold;
-      float glow = (pulse * 7.0) / (proximity + 10.0);
+      float glow = max(0.0, (pulse * 7.0) / (proximity + 10.0) - (proximity / 10000.0));
 
       // apply glow
       color = mix(vec3(0.1), vec3(0.7, 0.5, 0.9), glow);
@@ -99,6 +107,7 @@ interface Locations {
   uniforms: {
     screen: WebGLUniformLocation;
     time: WebGLUniformLocation;
+    scroll: WebGLUniformLocation;
   }
 }
 
@@ -114,8 +123,8 @@ export class Graphic {
   private locations: Locations;
 
   private lastTimestamp: number | undefined;
-  private time: number = 0;
-  private delta: number = 0;
+  private time = 0;
+  private delta = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -147,7 +156,8 @@ export class Graphic {
       },
       uniforms: {
         screen: this.gl.getUniformLocation(this.program, "screen")!,
-        time: this.gl.getUniformLocation(this.program, "time")!
+        time: this.gl.getUniformLocation(this.program, "time")!,
+        scroll: this.gl.getUniformLocation(this.program, "scroll")!
       }
     };
   }
@@ -184,6 +194,7 @@ export class Graphic {
     // uniforms
     this.gl.uniform2fv(this.locations.uniforms.screen, [this.width, this.height]);
     this.gl.uniform1f(this.locations.uniforms.time, this.time);
+    this.gl.uniform1f(this.locations.uniforms.scroll, window.scrollY / this.height);
 
     // vertex
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffers.vertex);
