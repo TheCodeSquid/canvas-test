@@ -59,7 +59,7 @@ const FRAGMENT_SHADER = `
     }
     main_wave *= max(0.5, mid_scroll);
 
-    float offset = middle / 10.0 - scroll * 10.0;
+    float offset = middle / 10.0 - min(0.5, scroll) * screen.y;
     float threshold = middle + main_wave + sub_wave - curve + offset;
 
     vec3 color;

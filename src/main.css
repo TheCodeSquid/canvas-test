@@ -12,13 +12,13 @@ body {
 
 body {
   background-color: #191919;
-  min-height: 200vh;
-  overflow-x: hidden;
+  min-height: 110vh;
 }
 
 canvas {
-  position: sticky;
-  top: -45vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: -2;
 }
 
@@ -49,47 +49,31 @@ canvas {
   backdrop-filter: invert(1) hue-rotate(180deg);
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 1em;
-  z-index: 1;
-
-  opacity: 0;
-  transform: translateY(-1em);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-nav.shown {
-  opacity: 1;
-  transform: none;
-}
-
-nav>a {
-  color: #000;
-  font-style: italic;
-}
-
 main {
-  max-width: 40rem;
-  margin: -40vh auto 0;
+  position: absolute;
+  top: 60vh;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 300vh;
 
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  align-items: stretch;
 
+  pointer-events: none;
   opacity: 0;
-  transform: translateY(1em);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 main.shown {
+  pointer-events: auto;
   opacity: 1;
-  transform: none;
 }
 
 h1 {
+  position: sticky;
+  top: 10vh;
+  margin: 0;
   text-align: center;
+  font-weight: 300;
 }
