@@ -7,16 +7,23 @@ body {
 body {
   background-color: #191919;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .text {
-  position: absolute;
-
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   mask-image: url("/contrast-text.svg");
   mask-position: center;
   mask-size: contain;

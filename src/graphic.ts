@@ -16,6 +16,8 @@ const VERTEX_SHADER = `
 `;
 
 const FRAGMENT_SHADER = `
+  #define PI 3.141592658
+
   precision highp float;
 
   uniform vec2 screen;
@@ -40,6 +42,14 @@ const FRAGMENT_SHADER = `
     float sub_wave = sin(screen_uv.x / wave_scale * 0.2 + time) * wave_scale * 0.5;
     float curve = pow(screen_uv.x / (60.0 * aspect), 2.0);
     float pulse = pow(sin(time * 1.5), 2.0) * 0.9 + 1.0;
+
+    float duration = 2.0;
+    float delay = 1.0;
+    if (time < duration + delay) {
+      float x = max(0.0, (time - delay) / duration);
+      float ease_cubic = x < 0.5 ? 4.0 * pow(x, 3.0) : 1.0 - pow(-2.0 * x + 2.0, 3.0) / 2.0;
+      main_wave *= ease_cubic;
+    }
 
     float offset = middle / 10.0;
     float threshold = middle + main_wave + sub_wave - curve + offset;
@@ -107,10 +117,6 @@ export class Graphic {
   private time: number = 0;
   private delta: number = 0;
 
-  get aspectRatio(): number {
-    return this.width / this.height;
-  }
-  
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.gl = canvas.getContext("webgl2")!;
