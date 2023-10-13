@@ -35,9 +35,7 @@ const FRAGMENT_SHADER = `
     float curve = pow(screen_uv.x / (60.0 * aspect), 2.0);
     float pulse = pow(sin(time * 1.5), 2.0) * 0.9 + 1.0;
 
-    // main_wave = 0.0;
-
-    float offset = 100.0 * min(1.0, max(0.5, aspect));
+    float offset = middle / 10.0;
     float threshold = middle + main_wave + sub_wave - curve + offset;
 
     vec3 color;
@@ -244,10 +242,9 @@ export class Graphic {
 
   
   private resize() {
-    const { width, height } = this.canvas.parentElement!.getBoundingClientRect();
-    this.width = width;
-    this.height = height;
-    this.canvas.width = width;
-    this.canvas.height = height;
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
   }
 }
